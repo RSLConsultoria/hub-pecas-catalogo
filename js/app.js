@@ -13,7 +13,7 @@
     selecao: {},
     termo: '',
     soFoto: false,
-    ui: { abertos: {}, verTodos: {}, busca: {} }
+    ui: { abertos: { detalhes: true }, verTodos: {}, busca: {} }
   };
 
   // ---------- Senha ----------
@@ -33,9 +33,9 @@
     $('campo-senha').focus();
   }
 
-  // A escolha "so com foto" fica lembrada no aparelho.
+  // A escolha "so com foto" fica lembrada no aparelho. Comeca ligada.
   var CHAVE_SO_FOTO = 'hubPecasSoFoto';
-  function lerSoFoto() { try { return localStorage.getItem(CHAVE_SO_FOTO) === '1'; } catch (e) { return false; } }
+  function lerSoFoto() { try { return localStorage.getItem(CHAVE_SO_FOTO) !== '0'; } catch (e) { return true; } }
   function gravarSoFoto(v) { try { localStorage.setItem(CHAVE_SO_FOTO, v ? '1' : '0'); } catch (e) { /* aba privada */ } }
 
   function modoDemo() { return /[?&]demo\b/.test(location.search); }
@@ -73,6 +73,7 @@
     return Object.keys(estado.selecao).reduce(function (n, k) {
       var s = estado.selecao[k];
       if (s instanceof Set) return n + (s.size ? 1 : 0);
+      if (s && s.familias) return n + Object.keys(s.familias).length;
       return n + (s && (typeof s.min === 'number' || typeof s.max === 'number') ? 1 : 0);
     }, 0);
   }
@@ -93,7 +94,7 @@
     $('limpar').hidden = !ativos;
     $('so-foto').setAttribute('aria-pressed', String(estado.soFoto));
 
-    T.filtros($('lista-filtros'), base, estado.selecao, C.FILTROS, estado.ui, { marcar: marcar, faixa: faixa });
+    T.filtros($('lista-filtros'), base, estado.selecao, C.FILTROS, estado.ui, { marcar: marcar, faixa: faixa, detalhe: detalhe, qtdDetalhe: qtdDetalhe });
     T.grade($('grade'), visiveis, abrir);
 
     var aviso = $('estado');
@@ -126,6 +127,23 @@
     desenhar();
   }
 
+  function familiasMarcadas() {
+    var s = estado.selecao.detalhes || (estado.selecao.detalhes = { familias: {} });
+    return s.familias;
+  }
+
+  function detalhe(chave, ligado) {
+    var f = familiasMarcadas();
+    if (ligado) f[chave] = f[chave] || {};
+    else delete f[chave];
+    desenhar();
+  }
+
+  function qtdDetalhe(chave, min, max) {
+    familiasMarcadas()[chave] = { min: numero(min), max: numero(max) };
+    desenhar();
+  }
+
   function limparTudo() {
     estado.selecao = {};
     estado.termo = '';
@@ -147,7 +165,13 @@
     var p = ref && (estado.catalogo.pecas || []).filter(function (x) { return x.ref_mrbl === ref; })[0];
     if (!p) { fecharPainel(false); return; }
     ultimoFoco = ultimoFoco || document.activeElement;
-    T.painel($('painel'), p, function () { fecharPainel(true); });
+    var todas = estado.catalogo.pecas || [];
+    T.painel($('painel'), p, function () { fecharPainel(true); }, {
+      familias: C.DETALHES,
+      detalhes: F.detalhesDaPeca(p, C.DETALHES),
+      parecidas: F.parecidas(p, todas, C.DETALHES, 8),
+      aoAbrir: abrir
+    });
     $('painel').hidden = false;
     $('fundo-painel').hidden = false;
     document.body.style.overflow = 'hidden';

@@ -41,9 +41,9 @@
     return (palavras[0][0] + (palavras[1] ? palavras[1][0] : '')).toUpperCase();
   }
 
-  // Sem foto: a esteira de corte com as iniciais em giz.
+  // Sem foto: a trama do tecido com as iniciais em fio dourado.
   function semFoto(descricao, legenda) {
-    return h('div.sem-foto.esteira', { role: 'img', 'aria-label': 'Sem foto: ' + (descricao || 'peça') },
+    return h('div.sem-foto.trama', { role: 'img', 'aria-label': 'Sem foto: ' + (descricao || 'peça') },
       h('span', {}, iniciais(descricao), legenda ? h('small', { texto: legenda }) : null));
   }
 
@@ -79,7 +79,9 @@
           h('span.peca-etiqueta', {},
             h('span.peca-ref', { texto: p.ref_mrbl }),
             h('span.peca-desc', { texto: p.descricao || 'Sem descrição' }),
-            p.cliente ? h('span.peca-cliente', { texto: p.cliente }) : null))));
+            h('span.peca-rodape', {},
+              p.cliente ? h('span.peca-cliente', { texto: p.cliente }) : h('span'),
+              typeof p.valor_peca === 'number' ? h('span.peca-valor', { texto: valor(p.valor_peca) }) : null)))));
     });
     ul.appendChild(frag);
   }
@@ -125,6 +127,42 @@
     if (!lista.length) ul.appendChild(h('li.opcao', {}, h('span.n', { texto: 'Nada encontrado' })));
   }
 
+  // "Tem na peca": marcar a familia exige que a peca tenha; com ela marcada,
+  // aparece a quantidade (de / ate) para quem quer, por exemplo, 20 travetes.
+  function listaDetalhes(f, contagem, sel, acoes) {
+    var marcadas = (sel && sel.familias) || {};
+    var ul = h('ul.opcoes.detalhes', {});
+    contagem.forEach(function (o) {
+      var ligada = Object.prototype.hasOwnProperty.call(marcadas, o.chave);
+      if (!ligada && o.n === 0) return;
+      var id = 'd-' + o.chave;
+      var li = h('li.opcao' + (ligada ? '.ligada' : ''), {},
+        h('label', { for: id },
+          h('input', { id: id, type: 'checkbox', checked: ligada, onchange: function (e) { acoes.detalhe(o.chave, e.target.checked); } }),
+          h('span', { texto: o.rotulo }),
+          h('span.n', { texto: String(o.n) })));
+      if (ligada && o.qtd) {
+        var faixa = marcadas[o.chave] || {};
+        var campo = function (lado) {
+          return h('input', {
+            type: 'number', inputmode: 'numeric', min: '0', step: '1',
+            placeholder: String(lado === 'min' ? o.qtd.min : o.qtd.max),
+            value: typeof faixa[lado] === 'number' ? String(faixa[lado]) : null,
+            'aria-label': (lado === 'min' ? 'Quantidade mínima de ' : 'Quantidade máxima de ') + o.rotulo.toLowerCase()
+          });
+        };
+        var de = campo('min'), ate = campo('max');
+        var mudar = function () { acoes.qtdDetalhe(o.chave, de.value, ate.value); };
+        de.addEventListener('change', mudar);
+        ate.addEventListener('change', mudar);
+        li.appendChild(h('div.qtd', {}, h('span', { texto: 'Quantidade' }), de, h('span', { texto: 'a' }), ate));
+      }
+      ul.appendChild(li);
+    });
+    if (!ul.children.length) ul.appendChild(h('li.opcao', {}, h('span.n', { texto: 'Nada encontrado' })));
+    return ul;
+  }
+
   function filtros(container, base, selecao, lista, ui, acoes) {
     var rolagem = container.parentNode ? container.parentNode.scrollTop : 0;
     limpar(container);
@@ -132,12 +170,15 @@
       var sel = selecao[f.chave];
       var ativos = f.tipo === 'faixa'
         ? (sel && (typeof sel.min === 'number' || typeof sel.max === 'number') ? 1 : 0)
-        : (sel ? sel.size : 0);
+        : f.tipo === 'detalhes' ? (sel && sel.familias ? Object.keys(sel.familias).length : 0)
+          : (sel ? sel.size : 0);
       var det = h('details.filtro', { open: !!ui.abertos[f.chave] || ativos > 0 },
         h('summary', {}, h('span', {}, f.rotulo, ativos && f.tipo !== 'faixa' ? h('span.filtro-ativos', { texto: String(ativos) }) : null)));
       det.addEventListener('toggle', function () { ui.abertos[f.chave] = det.open; });
 
-      if (f.tipo === 'faixa') {
+      if (f.tipo === 'detalhes') {
+        det.appendChild(listaDetalhes(f, raiz.HubFiltros.contarDetalhes(base, selecao, lista, f.chave), sel, acoes));
+      } else if (f.tipo === 'faixa') {
         var faixa = raiz.HubFiltros.faixaDeValores(base);
         var min = h('input', { type: 'number', inputmode: 'decimal', min: '0', step: '1', placeholder: faixa ? String(Math.floor(faixa.min)) : '', value: sel && typeof sel.min === 'number' ? String(sel.min) : null });
         var max = h('input', { type: 'number', inputmode: 'decimal', min: '0', step: '1', placeholder: faixa ? String(Math.ceil(faixa.max)) : '', value: sel && typeof sel.max === 'number' ? String(sel.max) : null });
@@ -178,7 +219,16 @@
     return dl.children.length ? dl : null;
   }
 
-  function painel(art, p, aoFechar) {
+  function miniatura(p, aoAbrir) {
+    return h('li', {}, h('button.mini', { type: 'button', onclick: function () { aoAbrir(p.ref_mrbl); } },
+      foto(p.foto_frente, p.descricao, 'mini-foto'),
+      h('span.peca-ref', { texto: p.ref_mrbl }),
+      h('span.mini-desc', { texto: p.descricao || 'Sem descrição' }),
+      typeof p.valor_peca === 'number' ? h('span.peca-valor', { texto: valor(p.valor_peca) }) : null));
+  }
+
+  function painel(art, p, aoFechar, extra) {
+    extra = extra || {};
     limpar(art);
     var fotos = [
       p.foto_frente ? { url: p.foto_frente, legenda: 'Frente' } : null,
@@ -212,12 +262,22 @@
       h('h3', { texto: 'Ficha técnica · ' + materiais.length + (materiais.length === 1 ? ' item' : ' itens') }),
       materiais.map(function (m, i) {
         var principal = (m.campos.filter(function (c) { return /tecido$/i.test(nomeLimpo(c.nome)) || /^material/i.test(nomeLimpo(c.nome)); })[0] || m.campos[0]);
-        return h('details.material', { open: i === 0 },
+        return h('details.material', {},
           h('summary', {},
             h('span', { texto: m.produto || 'Item ' + (i + 1) }),
             principal ? h('span.resumo', { texto: principal.valor }) : null),
           pares(m.campos.map(function (c) { return [nomeLimpo(c.nome), c.valor]; })));
       })) : null;
+
+    var tem = (extra.familias || []).map(function (f) {
+      var d = extra.detalhes && extra.detalhes[f.chave];
+      return d ? h('li', {}, f.rotulo, typeof d.qtd === 'number' ? h('b', { texto: '× ' + String(d.qtd).replace('.', ',') }) : null) : null;
+    }).filter(Boolean);
+    var blocoTem = tem.length ? h('section.bloco', {}, h('h3', { texto: 'Tem na peça' }), h('ul.tem', {}, tem)) : null;
+
+    var blocoParecidas = (extra.parecidas || []).length ? h('section.bloco', {},
+      h('h3', { texto: 'Peças parecidas' }),
+      h('ul.parecidas', {}, extra.parecidas.map(function (x) { return miniatura(x, extra.aoAbrir); }))) : null;
 
     var blocoCards = (p.cards || []).length ? h('section.bloco', {},
       h('h3', { texto: 'No Ploomes' }),
@@ -227,7 +287,7 @@
           h('a', { href: c.link, target: '_blank', rel: 'noopener', texto: 'Abrir card' }));
       }))) : null;
 
-    art.appendChild(h('header.painel-topo.esteira', {},
+    art.appendChild(h('header.painel-topo', {},
       h('span.peca-ref', { texto: p.ref_mrbl }),
       h('button.botao-texto', { type: 'button', onclick: aoFechar, texto: 'Fechar' })));
     art.appendChild(h('div.painel-corpo', {},
@@ -235,7 +295,9 @@
       p.cliente ? h('span.peca-cliente', { texto: p.cliente }) : null,
       blocoFotos,
       ficha ? h('section.bloco', {}, h('h3', { texto: 'Peça' }), ficha) : null,
+      blocoTem,
       blocoTecnica,
+      blocoParecidas,
       blocoCards));
   }
 

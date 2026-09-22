@@ -1,36 +1,41 @@
 /* ===== css/estilo.css =====
-   Direcao: o mundo da mesa de corte. Verde da esteira de corte com a grade
-   impressa, giz amarelo de alfaiate para o que esta marcado, e cada peca
-   como uma etiqueta pendurada. A grade da esteira e a assinatura: e ela que
-   aparece no lugar da foto quando a peca nao tem foto. */
+   Direcao: a identidade da MRBL Confeccao. O azul-marinho do logotipo, o fio
+   dourado que passa pela agulha e a letra redonda e monolinear do nome.
+   A assinatura e a costura: um pesponto dourado corre sob o topo, marca o
+   que esta ligado e contorna a peca sem foto, que aparece como a trama do
+   tecido azul. Cada peca continua sendo uma etiqueta pendurada. */
 
 :root {
-  --esteira: #1F4D43;
-  --esteira-escura: #173B33;
-  --grade: #3E7466;
-  --giz: #E8C547;
-  --grafite: #1C2321;
-  --grafite-suave: #55605C;
-  --papel: #F4F6F3;
+  --azul: #14287A;
+  --azul-fundo: #0E1D5C;
+  --azul-trama: #1B3290;
+  --ouro: #D4A21A;
+  --ouro-claro: #F7EBC4;
+  --tinta: #151B3B;
+  --tinta-suave: #5B6285;
+  --papel: #F4F5FA;
   --etiqueta: #FFFFFF;
-  --borda: #D9DED9;
+  --borda: #DCE0EC;
   --erro: #B23A2E;
 
-  --fonte: 'Archivo', system-ui, sans-serif;
+  --titulo: 'Quicksand', 'Nunito Sans', system-ui, sans-serif;
+  --fonte: 'Nunito Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --raio: 6px;
-  --sombra: 0 1px 2px rgba(28, 35, 33, .08), 0 4px 14px rgba(28, 35, 33, .06);
-  --lateral: 290px;
-  --painel: min(560px, 100vw);
+  --raio: 10px;
+  --sombra: 0 1px 2px rgba(20, 40, 122, .07), 0 6px 18px rgba(20, 40, 122, .07);
+  --lateral: 300px;
+  --painel: min(580px, 100vw);
+
+  /* O pesponto: tracos dourados de 7px com 5px de folga. */
+  --pesponto: repeating-linear-gradient(90deg, var(--ouro) 0 7px, transparent 7px 12px);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
   font-family: var(--fonte);
-  font-stretch: 100%;
-  color: var(--grafite);
+  color: var(--tinta);
   background: var(--papel);
   font-size: 15px;
   line-height: 1.45;
@@ -41,39 +46,27 @@ img { display: block; max-width: 100%; }
 [hidden] { display: none !important; }
 
 .so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-:focus-visible { outline: 3px solid var(--giz); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--ouro); outline-offset: 2px; }
 
-/* A grade da esteira de corte: linhas finas a cada 12px, mais fortes a cada 60px. */
-.esteira {
-  background-color: var(--esteira);
+/* A trama do tecido: sarja em diagonal, bem discreta, sobre o azul. */
+.trama {
+  background-color: var(--azul);
   background-image:
-    linear-gradient(var(--grade) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grade) 1px, transparent 1px),
-    linear-gradient(rgba(62, 116, 102, .45) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(62, 116, 102, .45) 1px, transparent 1px);
-  background-size: 60px 60px, 60px 60px, 12px 12px, 12px 12px;
-  background-position: -1px -1px;
-}
-
-.marca {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .18em;
-  font-weight: 600;
-  margin: 0;
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, .045) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, .06) 0 1px, transparent 1px 6px);
 }
 
 /* ---------- Botoes ---------- */
 .botao-primario {
   appearance: none; border: 0; cursor: pointer;
-  background: var(--giz); color: var(--grafite);
-  font-weight: 700; font-stretch: 75%; letter-spacing: .04em; text-transform: uppercase;
-  padding: 12px 18px; border-radius: var(--raio); width: 100%;
+  background: var(--ouro); color: var(--azul-fundo);
+  font-family: var(--titulo); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 14px;
+  padding: 13px 18px; border-radius: 999px; width: 100%;
 }
-.botao-primario:hover { filter: brightness(.95); }
+.botao-primario:hover { filter: brightness(1.05); }
 .botao-texto {
   appearance: none; border: 0; background: none; cursor: pointer; padding: 6px 4px;
-  font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px;
+  font-weight: 700; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; color: var(--azul);
 }
 
 /* ---------- Entrada ---------- */
@@ -83,61 +76,68 @@ img { display: block; max-width: 100%; }
 }
 .etiqueta-entrada {
   position: relative;
-  width: min(360px, 100%);
+  width: min(380px, 100%);
   background: var(--etiqueta);
-  border-radius: 10px 10px var(--raio) var(--raio);
-  padding: 44px 28px 28px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, .28);
+  border-radius: 16px;
+  padding: 18px 28px 28px;
+  box-shadow: 0 24px 60px rgba(5, 12, 45, .45);
 }
-.etiqueta-entrada .marca { color: var(--esteira); }
+/* Pesponto dourado por dentro da etiqueta de entrada */
+.etiqueta-entrada::after {
+  content: ''; position: absolute; inset: 8px; border-radius: 11px; pointer-events: none;
+  border: 1.5px dashed rgba(212, 162, 26, .7);
+}
+.etiqueta-entrada .logo { width: 220px; height: auto; margin: 0 auto 2px; }
 .etiqueta-entrada h1 {
-  font-stretch: 70%; font-weight: 800; font-size: 40px; line-height: 1; margin: 6px 0 6px; letter-spacing: -.01em;
+  font-family: var(--titulo); font-weight: 700; font-size: 26px; line-height: 1.1; margin: 0 0 4px; text-align: center; color: var(--azul);
 }
-.entrada-texto { margin: 0 0 22px; color: var(--grafite-suave); }
+.entrada-texto { margin: 0 0 22px; color: var(--tinta-suave); text-align: center; }
 .etiqueta-entrada label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
 .etiqueta-entrada input {
-  width: 100%; padding: 11px 12px; border: 1.5px solid var(--borda); border-radius: var(--raio); background: var(--papel);
+  width: 100%; padding: 11px 14px; border: 1.5px solid var(--borda); border-radius: var(--raio); background: var(--papel);
   margin-bottom: 14px;
 }
-.erro-senha { color: var(--erro); font-weight: 600; margin: -6px 0 14px; font-size: 14px; }
-
-/* O furo do cordao da etiqueta */
-.furo {
-  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-  width: 14px; height: 14px; border-radius: 50%;
-  background: var(--papel); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .25);
-}
-.entrada .furo { background: var(--esteira); }
+.erro-senha { color: var(--erro); font-weight: 700; margin: -6px 0 14px; font-size: 14px; }
 
 /* ---------- Topo ---------- */
 .app { min-height: 100vh; min-height: 100dvh; }
 .topo {
   position: sticky; top: 0; z-index: 20;
-  display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center;
-  padding: 12px 20px; color: var(--etiqueta);
-  border-bottom: 3px solid var(--giz);
+  display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center;
+  padding: 12px 22px 15px; color: var(--etiqueta); background: var(--azul);
 }
-.topo-marca { display: flex; flex-direction: column; line-height: 1.05; }
-.topo-marca .marca { color: var(--giz); }
-.topo-marca strong { font-stretch: 70%; font-weight: 800; font-size: 24px; letter-spacing: -.01em; }
+/* A costura sob o topo */
+.topo::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; background: var(--pesponto);
+}
+.topo-marca { display: flex; flex-direction: column; line-height: 1; }
+.marca-mrbl {
+  font-family: var(--titulo); font-weight: 700; font-size: 30px; letter-spacing: .02em;
+  display: inline-flex; align-items: flex-end;
+}
+.agulha { width: 18px; height: 26px; margin-left: -1px; margin-bottom: 2px; }
+.marca-hub {
+  font-family: var(--titulo); font-weight: 600; font-size: 11px; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--ouro); margin-top: 3px;
+}
 .topo-busca { display: flex; gap: 8px; align-items: stretch; max-width: 700px; }
 .topo-busca input {
-  flex: 1; min-width: 0; padding: 10px 14px; border-radius: var(--raio);
-  border: 0; background: var(--etiqueta); color: var(--grafite);
+  flex: 1; min-width: 0; padding: 10px 16px; border-radius: 999px;
+  border: 0; background: var(--etiqueta); color: var(--tinta);
 }
-/* Liga/desliga: contorno de giz quando desligado, giz cheio quando ligado. */
+/* Liga/desliga: contorno dourado quando desligado, dourado cheio quando ligado. */
 .botao-foto {
   appearance: none; cursor: pointer; white-space: nowrap;
-  border: 1.5px solid var(--giz); background: transparent; color: var(--giz);
-  font-weight: 700; font-stretch: 75%; letter-spacing: .04em; text-transform: uppercase; font-size: 13px;
-  padding: 0 14px; border-radius: var(--raio);
+  border: 1.5px solid var(--ouro); background: transparent; color: var(--ouro);
+  font-family: var(--titulo); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; font-size: 12.5px;
+  padding: 0 16px; border-radius: 999px;
 }
-.botao-foto::before { content: ''; display: inline-block; width: 10px; height: 10px; border: 1.5px solid currentColor; border-radius: 2px; margin-right: 8px; vertical-align: -1px; }
-.botao-foto[aria-pressed="true"] { background: var(--giz); color: var(--grafite); }
+.botao-foto::before { content: ''; display: inline-block; width: 10px; height: 10px; border: 1.5px solid currentColor; border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
+.botao-foto[aria-pressed="true"] { background: var(--ouro); color: var(--azul-fundo); }
 .botao-foto[aria-pressed="true"]::before { background: currentColor; }
 .topo-info { display: flex; align-items: center; gap: 16px; font-size: 13px; white-space: nowrap; }
 .contador { font-family: var(--mono); font-size: 13px; }
-.contador b { color: var(--giz); font-weight: 600; }
+.contador b { color: var(--ouro); font-weight: 600; }
 .atualizado { opacity: .8; }
 .topo .botao-texto { color: var(--etiqueta); }
 .botao-filtros { display: none; }
@@ -146,11 +146,12 @@ img { display: block; max-width: 100%; }
 .corpo { display: grid; grid-template-columns: var(--lateral) 1fr; align-items: start; }
 
 .filtros {
-  position: sticky; top: 70px; max-height: calc(100vh - 70px); overflow: auto;
-  padding: 18px 16px 40px 20px; border-right: 1px solid var(--borda);
+  position: sticky; top: 76px; max-height: calc(100vh - 76px); overflow: auto;
+  padding: 20px 16px 40px 22px; border-right: 1px solid var(--borda); background: var(--etiqueta);
+  min-height: calc(100vh - 76px);
 }
 .filtros-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-.filtros-topo h2 { font-stretch: 70%; font-weight: 800; font-size: 20px; margin: 0; letter-spacing: .02em; text-transform: uppercase; }
+.filtros-topo h2 { font-family: var(--titulo); font-weight: 700; font-size: 20px; margin: 0; color: var(--azul); }
 .so-celular { display: none; }
 
 .filtro { border-top: 1px solid var(--borda); padding: 12px 0; }
@@ -159,33 +160,42 @@ img { display: block; max-width: 100%; }
   font-weight: 700; font-size: 14px;
 }
 .filtro > summary::-webkit-details-marker { display: none; }
-.filtro > summary::after { content: '+'; font-family: var(--mono); color: var(--grafite-suave); }
+.filtro > summary::after { content: '+'; font-family: var(--mono); color: var(--tinta-suave); }
 .filtro[open] > summary::after { content: '–'; }
 .filtro-ativos {
-  font-family: var(--mono); font-size: 11px; background: var(--giz); border-radius: 10px; padding: 1px 7px; margin-left: 8px;
+  font-family: var(--mono); font-size: 11px; background: var(--ouro); color: var(--azul-fundo); border-radius: 10px; padding: 1px 7px; margin-left: 8px;
 }
-.filtro-busca { width: 100%; margin: 10px 0 4px; padding: 7px 10px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--etiqueta); font-size: 13px; }
+.filtro-busca { width: 100%; margin: 10px 0 4px; padding: 7px 12px; border: 1px solid var(--borda); border-radius: 999px; background: var(--papel); font-size: 13px; }
 .opcoes { list-style: none; margin: 8px 0 0; padding: 0; }
 .opcao label {
   display: grid; grid-template-columns: 18px 1fr auto; gap: 8px; align-items: start;
-  padding: 5px 4px; border-radius: 4px; cursor: pointer; font-size: 13.5px;
+  padding: 5px 6px; border-radius: 6px; cursor: pointer; font-size: 13.5px;
 }
-.opcao label:hover { background: rgba(31, 77, 67, .06); }
-.opcao input { margin: 2px 0 0; accent-color: var(--esteira); width: 16px; height: 16px; }
-.opcao .n { font-family: var(--mono); font-size: 12px; color: var(--grafite-suave); }
+.opcao label:hover { background: rgba(20, 40, 122, .06); }
+.opcao input { margin: 2px 0 0; accent-color: var(--azul); width: 16px; height: 16px; }
+.opcao .n { font-family: var(--mono); font-size: 12px; color: var(--tinta-suave); }
 .opcao.zerada { opacity: .45; }
 .ver-mais { margin-top: 4px; }
-.faixa { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-.faixa label { font-size: 12px; color: var(--grafite-suave); display: grid; gap: 3px; }
-.faixa input { width: 100%; padding: 7px 9px; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--etiqueta); }
-.faixa-dica { grid-column: 1 / -1; font-size: 12px; color: var(--grafite-suave); margin: 0; }
 
-.conteudo { padding: 20px; min-width: 0; }
+/* "Tem na peca": a familia ligada ganha o pesponto e a quantidade */
+.detalhes .opcao.ligada { background: var(--ouro-claro); border-radius: 6px; margin: 2px 0; }
+.qtd {
+  display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 6px; align-items: center;
+  padding: 2px 8px 8px 32px; font-size: 12px; color: var(--tinta-suave);
+}
+.qtd input { width: 100%; min-width: 0; padding: 5px 7px; border: 1px solid var(--borda); border-radius: 6px; background: var(--etiqueta); font-size: 13px; }
+
+.faixa { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.faixa label { font-size: 12px; color: var(--tinta-suave); display: grid; gap: 3px; }
+.faixa input { width: 100%; padding: 7px 9px; border: 1px solid var(--borda); border-radius: 6px; background: var(--papel); }
+.faixa-dica { grid-column: 1 / -1; font-size: 12px; color: var(--tinta-suave); margin: 0; }
+
+.conteudo { padding: 22px; min-width: 0; }
 
 /* ---------- Grade de etiquetas ---------- */
 .grade {
   list-style: none; margin: 0; padding: 0;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px;
 }
 .peca { position: relative; }
 .peca-botao {
@@ -194,50 +204,57 @@ img { display: block; max-width: 100%; }
   display: flex; flex-direction: column; height: 100%;
   transition: transform .15s ease, box-shadow .15s ease;
 }
-.peca-botao:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(28,35,33,.1), 0 10px 24px rgba(28,35,33,.1); }
+.peca-botao:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(20,40,122,.1), 0 12px 28px rgba(20,40,122,.12); }
 .peca-foto { aspect-ratio: 3 / 4; width: 100%; object-fit: cover; background: var(--borda); }
 
-/* Sem foto: a esteira de corte com as iniciais em giz */
+/* Sem foto: a trama azul, um pesponto dourado por dentro e as iniciais */
 .sem-foto {
-  aspect-ratio: 3 / 4; width: 100%;
+  position: relative; aspect-ratio: 3 / 4; width: 100%;
   display: grid; place-items: center;
-  font-stretch: 62%; font-weight: 800; font-size: 56px; color: var(--giz); letter-spacing: .02em;
+  font-family: var(--titulo); font-weight: 700; font-size: 52px; color: var(--ouro); letter-spacing: .04em;
+}
+.sem-foto::after {
+  content: ''; position: absolute; inset: 10px; border: 1.5px dashed rgba(212, 162, 26, .55); border-radius: 6px; pointer-events: none;
 }
 .sem-foto small {
-  display: block; text-align: center; font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
-  color: rgba(255, 255, 255, .65); font-weight: 500; margin-top: 2px;
+  display: block; text-align: center; font-family: var(--titulo); font-size: 10px; letter-spacing: .3em;
+  color: rgba(255, 255, 255, .7); font-weight: 600; margin-top: 2px;
 }
 
-/* A etiqueta: furo do cordao, referencia em mono, descricao, cliente */
-.peca-etiqueta { position: relative; padding: 16px 14px 14px 30px; border-top: 1px dashed var(--borda); flex: 1; }
+/* A etiqueta: furo do cordao, referencia em mono, descricao, cliente e valor */
+.peca-etiqueta { position: relative; padding: 14px 14px 12px 30px; flex: 1; display: flex; flex-direction: column; }
 .peca-etiqueta::before {
-  content: ''; position: absolute; left: 11px; top: 19px; width: 9px; height: 9px; border-radius: 50%;
+  content: ''; position: absolute; left: 11px; top: 18px; width: 9px; height: 9px; border-radius: 50%;
   background: var(--papel); box-shadow: inset 0 1px 1px rgba(0,0,0,.25);
 }
-.peca-ref { font-family: var(--mono); font-size: 12.5px; font-weight: 600; letter-spacing: .02em; color: var(--esteira); display: block; }
-.peca-desc { font-weight: 700; font-size: 15px; line-height: 1.25; margin: 4px 0 6px; display: block; }
-.peca-cliente { font-stretch: 75%; font-weight: 600; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--grafite-suave); }
+/* o fio que costura a etiqueta a foto */
+.peca-etiqueta::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--pesponto); opacity: .8; }
+.peca-ref { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--azul); display: block; }
+.peca-desc { font-weight: 800; font-size: 15px; line-height: 1.25; margin: 4px 0 8px; display: block; }
+.peca-rodape { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: auto; }
+.peca-cliente { font-family: var(--titulo); font-weight: 600; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); }
+.peca-valor { font-family: var(--titulo); font-weight: 700; font-size: 14px; color: var(--azul); white-space: nowrap; }
 
 /* ---------- Estados ---------- */
 .estado { text-align: center; padding: 60px 20px; max-width: 460px; margin: 0 auto; }
-.estado h2 { font-stretch: 70%; font-weight: 800; font-size: 28px; margin: 0 0 8px; }
-.estado p { color: var(--grafite-suave); margin: 0 0 18px; }
-.estado .botao-primario { width: auto; }
+.estado h2 { font-family: var(--titulo); font-weight: 700; font-size: 26px; margin: 0 0 8px; color: var(--azul); }
+.estado p { color: var(--tinta-suave); margin: 0 0 18px; }
+.estado .botao-primario { width: auto; padding-inline: 24px; }
 
 .carregando {
-  position: fixed; inset: 0; display: grid; place-content: center; gap: 14px; text-align: center;
+  position: fixed; inset: 0; display: grid; place-content: center; gap: 16px; text-align: center;
   color: var(--etiqueta); z-index: 50;
 }
-.carregando p { margin: 0; font-weight: 600; }
-.carregando-linha { display: block; width: 160px; height: 3px; background: rgba(255,255,255,.2); position: relative; overflow: hidden; margin: 0 auto; border-radius: 2px; }
-.carregando-linha::after { content: ''; position: absolute; inset: 0; width: 40%; background: var(--giz); animation: costura 1s linear infinite; }
-@keyframes costura { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+.carregando p { margin: 0; font-weight: 700; font-family: var(--titulo); letter-spacing: .04em; }
+/* A agulha costurando: o pesponto dourado corre da esquerda para a direita */
+.carregando-linha { display: block; width: 180px; height: 2px; background: var(--pesponto); margin: 0 auto; animation: costura .6s linear infinite; background-size: 12px 2px; }
+@keyframes costura { from { background-position: 0 0; } to { background-position: 12px 0; } }
 
 /* ---------- Painel de detalhe ---------- */
-.fundo-painel { position: fixed; inset: 0; background: rgba(23, 59, 51, .45); z-index: 30; }
+.fundo-painel { position: fixed; inset: 0; background: rgba(14, 29, 92, .45); z-index: 30; }
 .painel {
   position: fixed; top: 0; right: 0; bottom: 0; width: var(--painel); z-index: 40;
-  background: var(--etiqueta); overflow: auto; box-shadow: -10px 0 40px rgba(0,0,0,.2);
+  background: var(--etiqueta); overflow: auto; box-shadow: -10px 0 40px rgba(5,12,45,.25);
   animation: entra .18s ease-out;
 }
 .painel:focus { outline: none; }
@@ -245,83 +262,116 @@ img { display: block; max-width: 100%; }
 
 .painel-topo {
   position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 12px 18px; color: var(--etiqueta);
+  padding: 12px 20px 15px; color: var(--etiqueta); background: var(--azul);
 }
-.painel-topo .peca-ref { color: var(--giz); font-size: 14px; }
+.painel-topo::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; background: var(--pesponto); }
+.painel-topo .peca-ref { color: var(--ouro); font-size: 14px; }
 .painel-topo .botao-texto { color: var(--etiqueta); }
-.painel-corpo { padding: 20px 22px 40px; }
-.painel h2 { font-stretch: 70%; font-weight: 800; font-size: 32px; line-height: 1.05; margin: 0 0 4px; }
-.painel .peca-cliente { font-size: 13px; }
+.painel-corpo { padding: 22px 24px 40px; }
+.painel h2 { font-family: var(--titulo); font-weight: 700; font-size: 30px; line-height: 1.08; margin: 0 0 4px; color: var(--azul); }
+.painel .peca-cliente { font-size: 12.5px; }
 
 .fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 22px; }
 .fotos.uma { grid-template-columns: 1fr; max-width: 320px; }
 .fotos figure { margin: 0; }
 .fotos a { display: block; border-radius: var(--raio); overflow: hidden; }
 .fotos img { aspect-ratio: 3 / 4; object-fit: cover; width: 100%; background: var(--borda); }
-.fotos figcaption { font-size: 12px; color: var(--grafite-suave); margin-top: 4px; font-weight: 600; }
+.fotos figcaption { font-size: 12px; color: var(--tinta-suave); margin-top: 4px; font-weight: 700; }
 /* No painel, sem foto nao pode empurrar a ficha para fora da tela do celular. */
-.fotos .sem-foto { border-radius: var(--raio); font-size: 56px; aspect-ratio: 5 / 3; }
+.fotos .sem-foto { border-radius: var(--raio); font-size: 52px; aspect-ratio: 5 / 3; }
 .fotos.uma:has(.sem-foto) { max-width: none; }
 
-.bloco { margin-top: 26px; }
+.bloco { margin-top: 28px; }
 .bloco > h3 {
-  font-stretch: 75%; font-weight: 800; font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--esteira); margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--esteira);
+  position: relative;
+  font-family: var(--titulo); font-weight: 700; font-size: 12.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--azul); margin: 0 0 12px; padding-bottom: 8px;
 }
+.bloco > h3::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--pesponto); }
 .pares { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; margin: 0; }
 .pares dt, .pares dd { padding: 7px 0; border-bottom: 1px solid var(--borda); margin: 0; font-size: 14px; }
-.pares dt { color: var(--grafite-suave); padding-right: 12px; }
-.pares dd { font-weight: 600; overflow-wrap: anywhere; }
+.pares dt { color: var(--tinta-suave); padding-right: 12px; }
+.pares dd { font-weight: 700; overflow-wrap: anywhere; }
 
-/* Ficha tecnica: cada linha da proposta e uma ficha dobravel */
-.material { border: 1px solid var(--borda); border-radius: var(--raio); margin-bottom: 8px; background: var(--papel); }
+/* O que tem na peca: fichas com a quantidade em dourado */
+.tem { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tem li {
+  display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 12px; border-radius: 999px;
+  background: var(--papel); border: 1px solid var(--borda); font-weight: 700; font-size: 13px;
+}
+.tem b { font-family: var(--mono); font-weight: 600; font-size: 12px; color: var(--azul); background: var(--ouro-claro); border-radius: 999px; padding: 0 6px; }
+
+/* Ficha tecnica: cada linha da proposta e uma ficha dobravel, fechada */
+.material { border: 1px solid var(--borda); border-radius: 8px; margin-bottom: 8px; background: var(--papel); }
 .material > summary {
   list-style: none; cursor: pointer; padding: 10px 12px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline;
   font-weight: 700; font-size: 14px;
 }
 .material > summary::-webkit-details-marker { display: none; }
-.material > summary .resumo { font-weight: 500; color: var(--grafite-suave); font-size: 12.5px; text-align: right; }
-.material .pares { padding: 0 12px 8px; background: var(--etiqueta); border-top: 1px solid var(--borda); }
+.material[open] { border-color: var(--azul); }
+.material > summary .resumo { font-weight: 600; color: var(--tinta-suave); font-size: 12.5px; text-align: right; }
+.material .pares { padding: 0 12px 8px; background: var(--etiqueta); border-top: 1px solid var(--borda); border-radius: 0 0 8px 8px; }
 .material .pares dt, .material .pares dd { font-size: 13px; }
+
+/* Pecas parecidas: uma fileira que rola para o lado */
+.parecidas {
+  list-style: none; margin: 0 -24px; padding: 2px 24px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: 132px; gap: 12px;
+  overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain;
+}
+.parecidas li { scroll-snap-align: start; }
+.mini {
+  appearance: none; border: 1px solid var(--borda); background: var(--etiqueta); border-radius: 8px; padding: 0 0 8px; cursor: pointer;
+  width: 100%; text-align: left; overflow: hidden; display: flex; flex-direction: column; gap: 2px; height: 100%;
+}
+.mini:hover { border-color: var(--azul); }
+.mini .mini-foto, .mini .sem-foto { aspect-ratio: 3 / 4; width: 100%; object-fit: cover; font-size: 30px; margin-bottom: 6px; }
+.mini .sem-foto::after { inset: 6px; }
+.mini .peca-ref { font-size: 11px; padding: 0 8px; }
+.mini-desc { font-weight: 800; font-size: 12.5px; line-height: 1.2; padding: 0 8px; }
+.mini .peca-valor { font-size: 12.5px; padding: 0 8px; }
 
 .cards-ploomes { list-style: none; margin: 0; padding: 0; }
 .cards-ploomes li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--borda); font-size: 14px; }
-.cards-ploomes .etapa { color: var(--grafite-suave); font-size: 13px; display: block; }
-.cards-ploomes a { font-weight: 700; color: var(--esteira); white-space: nowrap; }
+.cards-ploomes .etapa { color: var(--tinta-suave); font-size: 13px; display: block; }
+.cards-ploomes a { font-weight: 800; color: var(--azul); white-space: nowrap; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 860px) {
-  .topo { grid-template-columns: 1fr auto; gap: 10px; padding: 10px 14px; }
-  .topo-busca { grid-column: 1 / -1; grid-row: 2; }
-  .topo-busca { max-width: none; }
+  .topo { grid-template-columns: 1fr auto; gap: 10px; padding: 10px 14px 16px; }
+  .marca-mrbl { font-size: 24px; }
+  .agulha { width: 15px; height: 21px; }
+  .marca-hub { font-size: 10px; letter-spacing: .26em; }
+  .topo-busca { grid-column: 1 / -1; grid-row: 2; max-width: none; }
   .topo-info { gap: 10px; }
   .atualizado { display: none; }
   .botao-filtros {
     display: inline-block; grid-column: 1 / -1; grid-row: 3; justify-self: start;
-    appearance: none; border: 0; cursor: pointer; background: var(--giz); color: var(--grafite);
-    font-weight: 700; font-stretch: 75%; letter-spacing: .04em; text-transform: uppercase; font-size: 13px;
-    padding: 7px 12px; border-radius: var(--raio);
+    appearance: none; border: 0; cursor: pointer; background: var(--ouro); color: var(--azul-fundo);
+    font-family: var(--titulo); font-weight: 700; letter-spacing: .05em; text-transform: uppercase; font-size: 12.5px;
+    padding: 7px 16px; border-radius: 999px;
   }
   .corpo { grid-template-columns: 1fr; }
   .filtros {
-    position: fixed; inset: 0; top: 0; z-index: 45; max-height: none; background: var(--papel);
+    position: fixed; inset: 0; top: 0; z-index: 45; max-height: none; min-height: 0; background: var(--etiqueta);
     border: 0; padding: 16px 18px 90px; transform: translateY(100%); transition: transform .2s ease;
   }
   .filtros.aberto { transform: none; }
   .so-celular { display: inline-block; }
   .conteudo { padding: 14px; }
   .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .peca-etiqueta { padding: 13px 10px 12px 24px; }
+  .peca-etiqueta { padding: 12px 10px 10px 24px; }
   .peca-etiqueta::before { left: 8px; top: 16px; width: 8px; height: 8px; }
   .peca-desc { font-size: 14px; }
-  .sem-foto { font-size: 42px; }
+  .peca-rodape { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .sem-foto { font-size: 40px; }
   .painel { width: 100vw; }
   .painel-corpo { padding: 16px 16px 40px; }
-  .painel h2 { font-size: 27px; }
+  .parecidas { margin: 0 -16px; padding-inline: 16px; }
+  .painel h2 { font-size: 26px; }
 }
 @media (max-width: 380px) {
   .grade { gap: 10px; }
-  .peca-ref { font-size: 11.5px; }
+  .peca-ref { font-size: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

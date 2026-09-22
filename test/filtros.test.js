@@ -111,7 +111,7 @@ test('config lista os filtros do design, com tipo valido', () => {
   const chaves = FILTROS.map((f) => f.chave);
   ['cliente', 'colecao', 'tipo_demanda', 'modelista', 'produzido_por', 'valor_peca', 'tecidos', 'composicoes', 'tipos_tecido', 'marcas_ziper']
     .forEach((c) => assert.ok(chaves.includes(c), `falta o filtro ${c}`));
-  FILTROS.forEach((f) => assert.ok(['texto', 'lista', 'faixa'].includes(f.tipo), `${f.chave}: tipo ${f.tipo}`));
+  FILTROS.forEach((f) => assert.ok(['texto', 'lista', 'faixa', 'detalhes'].includes(f.tipo), `${f.chave}: tipo ${f.tipo}`));
 });
 
 // --- so com foto -------------------------------------------------------
@@ -125,4 +125,83 @@ test('so com foto mantem peca com foto de frente ou de costas', () => {
     { ref_mrbl: 'D' }
   ];
   assert.deepStrictEqual(soComFoto(pecas).map((p) => p.ref_mrbl), ['A', 'B']);
+});
+
+// --- tem na peca ----------------------------------------------------------
+
+const { detalhesDaPeca, contarDetalhes, parecidas } = require('../js/filtros.js');
+const { DETALHES } = require('../js/config.js');
+
+function linha(produto, campos) {
+  return { produto, quantidade: '', campos: Object.entries(campos || {}).map(([nome, valor]) => ({ nome, valor })) };
+}
+
+const CALCA = { ref_mrbl: 'C1', descricao: 'CALÇA PANTALONA', tecidos: ['LINHO'], materiais: [
+  linha('A. TECIDO 1 PRINCIPAL', { Tecido: 'LINHO' }),
+  linha('ZÍPER METAL C.A.', { 'Quantidade - Zíper🟡': '1' }),
+  linha('TRAVETE', { 'Quantidade - Aviamento Costura Detalhes🟡': '21' }),
+  linha('BOTÃO DE MASSA 4F', { 'Qtd consumo - Botão e Fivela🟡': '2' }),
+  linha('BOTÃO FORRADO', { 'Qtd consumo - Botão e Fivela🟡': '3', 'Qtd grade - Botão e Fivela': '9' }),
+  linha('- CASEADO DE OLHO - GENÉRICO', {}),
+  linha('PORTA BOTÃO', {}),
+  linha('TAG', {})
+] };
+const CAMISA = { ref_mrbl: 'C2', descricao: 'CAMISA BÁSICA', tecidos: ['TRICOLINE'], materiais: [
+  linha('BOTÃO DE MASSA 2F', { 'Qtd consumo - Botão e Fivela🟡': '8' }),
+  linha('CASEADO RETO FUNCIONAL', { 'Quantidade - Aviamento Costura Detalhes🟡': '8' })
+] };
+const FILTRO_DET = [{ chave: 'detalhes', rotulo: 'Tem na peça', tipo: 'detalhes', familias: DETALHES }];
+
+test('detalhes: familia pelo nome do produto, quantidade somada entre linhas', () => {
+  const d = detalhesDaPeca(CALCA, DETALHES);
+  assert.deepStrictEqual(d.ziper, { qtd: 1 });
+  assert.deepStrictEqual(d.travete, { qtd: 21 });
+  assert.deepStrictEqual(d.botao, { qtd: 5 }, 'soma 2 + 3, e ignora a Qtd grade');
+  assert.deepStrictEqual(d.caseado, { qtd: null }, 'prefixo "- " nao atrapalha; sem campo de quantidade fica null');
+  assert.ok(!('tag' in d));
+});
+
+test('detalhes: PORTA BOTAO nao conta como botao', () => {
+  const p = { ref_mrbl: 'X', materiais: [linha('PORTA BOTÃO', {})] };
+  assert.ok(!('botao' in detalhesDaPeca(p, DETALHES)));
+});
+
+test('filtro tem na peca: entre familias vale E', () => {
+  const pecas = [CALCA, CAMISA];
+  const so = (familias) => aplicar(pecas, { detalhes: { familias } }, FILTRO_DET).map((p) => p.ref_mrbl);
+  assert.deepStrictEqual(so({ botao: {} }), ['C1', 'C2']);
+  assert.deepStrictEqual(so({ botao: {}, ziper: {} }), ['C1']);
+  assert.deepStrictEqual(so({}), ['C1', 'C2'], 'nada marcado nao restringe');
+});
+
+test('filtro tem na peca: faixa de quantidade', () => {
+  const pecas = [CALCA, CAMISA];
+  const so = (familias) => aplicar(pecas, { detalhes: { familias } }, FILTRO_DET).map((p) => p.ref_mrbl);
+  assert.deepStrictEqual(so({ botao: { min: 6 } }), ['C2']);
+  assert.deepStrictEqual(so({ travete: { min: 10, max: 30 } }), ['C1']);
+  assert.deepStrictEqual(so({ caseado: { min: 1 } }), ['C2'], 'quantidade desconhecida nao passa numa faixa');
+});
+
+test('contagem de detalhes traz n e faixa de quantidade', () => {
+  const c = contarDetalhes([CALCA, CAMISA], {}, FILTRO_DET, 'detalhes');
+  const botao = c.find((x) => x.chave === 'botao');
+  assert.deepStrictEqual(botao, { chave: 'botao', rotulo: 'Botão', n: 2, qtd: { min: 5, max: 8 } });
+  assert.strictEqual(c[0].n, 2, 'maior contagem primeiro');
+});
+
+// --- pecas parecidas -------------------------------------------------------
+
+test('parecidas: mesmo tipo de peca e tecido vem primeiro; a propria peca fica fora', () => {
+  const base = [
+    CALCA,
+    { ref_mrbl: 'C4', descricao: 'CALÇA JOGGER', tecidos: ['MOLETOM'], materiais: [] },
+    { ref_mrbl: 'C3', descricao: 'CALÇA RETA', tecidos: ['LINHO'], materiais: CALCA.materiais },
+    CAMISA
+  ];
+  const r = parecidas(CALCA, base, DETALHES).map((p) => p.ref_mrbl);
+  assert.deepStrictEqual(r, ['C3', 'C4']);
+});
+
+test('parecidas: sem nada em comum, lista vazia', () => {
+  assert.deepStrictEqual(parecidas(CALCA, [CALCA, CAMISA], DETALHES), []);
 });

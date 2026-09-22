@@ -1,6 +1,6 @@
 # HUB de Peças — catálogo
 
-Catálogo interno das peças já produzidas pela MRBL: filtros por cliente, coleção, tecido e composição, busca por referência e a ficha técnica completa de cada peça.
+Catálogo interno das peças já produzidas pela MRBL: filtros por cliente, coleção, tecido, composição e pelo que tem na peça (zíper, botão, travete, com quantidade), busca por referência, peças parecidas e a ficha técnica completa de cada peça.
 
 **Este repositório tem só o código da página.** Nenhuma peça, cliente ou preço está aqui. Os dados vêm, na hora, de um webhook do n8n que só responde com a senha do catálogo — e a senha fica guardada apenas no aparelho de quem usa.
 
@@ -19,6 +19,7 @@ Ploomes CRM ──(sync n8n, de hora em hora)──► Google Sheets ──(webh
 | Quero… | Arquivo |
 |---|---|
 | incluir ou tirar um filtro | `js/config.js`, lista `FILTROS` |
+| incluir um item em "Tem na peça" | `js/config.js`, lista `DETALHES` |
 | mudar como os filtros combinam | `js/filtros.js` (tem teste) |
 | mudar a aparência | `css/estilo.css` |
 | mudar o que aparece no card ou na ficha | `js/tela.js` |
@@ -29,7 +30,7 @@ Ploomes CRM ──(sync n8n, de hora em hora)──► Google Sheets ──(webh
 npm test
 ```
 
-Só a lógica de filtro, contagem e busca tem teste automático; os dados de teste são inventados.
+Só a lógica de filtro, contagem, busca e peças parecidas tem teste automático; os dados de teste são inventados.
 
 ## Publicação
 
