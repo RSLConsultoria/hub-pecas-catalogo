@@ -12,6 +12,7 @@
     catalogo: null,
     selecao: {},
     termo: '',
+    soFoto: false,
     ui: { abertos: {}, verTodos: {}, busca: {} }
   };
 
@@ -31,6 +32,11 @@
     $('campo-senha').value = '';
     $('campo-senha').focus();
   }
+
+  // A escolha "so com foto" fica lembrada no aparelho.
+  var CHAVE_SO_FOTO = 'hubPecasSoFoto';
+  function lerSoFoto() { try { return localStorage.getItem(CHAVE_SO_FOTO) === '1'; } catch (e) { return false; } }
+  function gravarSoFoto(v) { try { localStorage.setItem(CHAVE_SO_FOTO, v ? '1' : '0'); } catch (e) { /* aba privada */ } }
 
   function modoDemo() { return /[?&]demo\b/.test(location.search); }
 
@@ -73,7 +79,9 @@
 
   function desenhar() {
     var todas = estado.catalogo.pecas || [];
-    var base = F.buscar(todas, estado.termo);
+    // So com foto vale antes de tudo: as contagens dos filtros ja mostram
+    // quantas pecas COM FOTO cada opcao traz.
+    var base = F.buscar(estado.soFoto ? F.soComFoto(todas) : todas, estado.termo);
     var visiveis = F.aplicar(base, estado.selecao, C.FILTROS);
     var ativos = contarAtivos();
 
@@ -83,6 +91,7 @@
     $('contador').append(b, ' de ' + todas.length + ' peças');
     $('abrir-filtros').textContent = ativos ? 'Filtros (' + ativos + ')' : 'Filtros';
     $('limpar').hidden = !ativos;
+    $('so-foto').setAttribute('aria-pressed', String(estado.soFoto));
 
     T.filtros($('lista-filtros'), base, estado.selecao, C.FILTROS, estado.ui, { marcar: marcar, faixa: faixa });
     T.grade($('grade'), visiveis, abrir);
@@ -92,8 +101,11 @@
     if (!todas.length) {
       T.estado(aviso, 'Ainda não há peças no catálogo', 'Assim que o sincronismo com o Ploomes rodar, elas aparecem aqui.');
     } else if (!visiveis.length) {
-      T.estado(aviso, 'Nenhuma peça com esses filtros', estado.termo ? 'Tente outra busca ou tire algum filtro.' : 'Tire algum filtro para ver mais peças.',
-        'Limpar filtros e busca', limparTudo);
+      T.estado(aviso, 'Nenhuma peça com esses filtros',
+        estado.soFoto ? 'Desligue "Só com foto" ou tire algum filtro para ver mais peças.'
+          : estado.termo ? 'Tente outra busca ou tire algum filtro.' : 'Tire algum filtro para ver mais peças.',
+        estado.soFoto ? 'Mostrar todas as peças' : 'Limpar filtros e busca',
+        estado.soFoto ? function () { estado.soFoto = false; gravarSoFoto(false); limparTudo(); } : limparTudo);
     }
   }
 
@@ -178,6 +190,11 @@
     espera = setTimeout(function () { estado.termo = e.target.value; desenhar(); }, 120);
   });
   $('limpar').addEventListener('click', limparTudo);
+  $('so-foto').addEventListener('click', function () {
+    estado.soFoto = !estado.soFoto;
+    gravarSoFoto(estado.soFoto);
+    desenhar();
+  });
   $('abrir-filtros').addEventListener('click', function () { abrirFiltros(true); });
   $('fechar-filtros').addEventListener('click', function () { abrirFiltros(false); });
   $('fundo-painel').addEventListener('click', function () { fecharPainel(true); });
@@ -189,6 +206,7 @@
   });
 
   // ---------- Inicio ----------
+  estado.soFoto = lerSoFoto();
   var guardada = lerSenha();
   if (modoDemo()) carregar('demo');
   else if (guardada) carregar(guardada);

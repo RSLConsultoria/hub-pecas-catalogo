@@ -120,10 +120,21 @@ img { display: block; max-width: 100%; }
 .topo-marca { display: flex; flex-direction: column; line-height: 1.05; }
 .topo-marca .marca { color: var(--giz); }
 .topo-marca strong { font-stretch: 70%; font-weight: 800; font-size: 24px; letter-spacing: -.01em; }
+.topo-busca { display: flex; gap: 8px; align-items: stretch; max-width: 700px; }
 .topo-busca input {
-  width: 100%; max-width: 560px; padding: 10px 14px; border-radius: var(--raio);
+  flex: 1; min-width: 0; padding: 10px 14px; border-radius: var(--raio);
   border: 0; background: var(--etiqueta); color: var(--grafite);
 }
+/* Liga/desliga: contorno de giz quando desligado, giz cheio quando ligado. */
+.botao-foto {
+  appearance: none; cursor: pointer; white-space: nowrap;
+  border: 1.5px solid var(--giz); background: transparent; color: var(--giz);
+  font-weight: 700; font-stretch: 75%; letter-spacing: .04em; text-transform: uppercase; font-size: 13px;
+  padding: 0 14px; border-radius: var(--raio);
+}
+.botao-foto::before { content: ''; display: inline-block; width: 10px; height: 10px; border: 1.5px solid currentColor; border-radius: 2px; margin-right: 8px; vertical-align: -1px; }
+.botao-foto[aria-pressed="true"] { background: var(--giz); color: var(--grafite); }
+.botao-foto[aria-pressed="true"]::before { background: currentColor; }
 .topo-info { display: flex; align-items: center; gap: 16px; font-size: 13px; white-space: nowrap; }
 .contador { font-family: var(--mono); font-size: 13px; }
 .contador b { color: var(--giz); font-weight: 600; }
@@ -282,7 +293,7 @@ img { display: block; max-width: 100%; }
 @media (max-width: 860px) {
   .topo { grid-template-columns: 1fr auto; gap: 10px; padding: 10px 14px; }
   .topo-busca { grid-column: 1 / -1; grid-row: 2; }
-  .topo-busca input { max-width: none; }
+  .topo-busca { max-width: none; }
   .topo-info { gap: 10px; }
   .atualizado { display: none; }
   .botao-filtros {

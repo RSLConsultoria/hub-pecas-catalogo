@@ -83,7 +83,14 @@
     return { min: Math.min.apply(null, nums), max: Math.max.apply(null, nums) };
   }
 
-  var HubFiltros = { aplicar: aplicar, contarOpcoes: contarOpcoes, buscar: buscar, faixaDeValores: faixaDeValores, normalizar: normalizar };
+  // Peca com pelo menos uma foto (frente ou costas).
+  function soComFoto(pecas) {
+    return (pecas || []).filter(function (p) {
+      return String(p.foto_frente || '').trim() !== '' || String(p.foto_costas || '').trim() !== '';
+    });
+  }
+
+  var HubFiltros = { aplicar: aplicar, contarOpcoes: contarOpcoes, buscar: buscar, faixaDeValores: faixaDeValores, soComFoto: soComFoto, normalizar: normalizar };
   raiz.HubFiltros = HubFiltros;
   if (typeof module !== 'undefined') { module.exports = HubFiltros; }
 })(typeof window !== 'undefined' ? window : globalThis);

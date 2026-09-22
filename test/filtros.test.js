@@ -113,3 +113,16 @@ test('config lista os filtros do design, com tipo valido', () => {
     .forEach((c) => assert.ok(chaves.includes(c), `falta o filtro ${c}`));
   FILTROS.forEach((f) => assert.ok(['texto', 'lista', 'faixa'].includes(f.tipo), `${f.chave}: tipo ${f.tipo}`));
 });
+
+// --- so com foto -------------------------------------------------------
+
+test('so com foto mantem peca com foto de frente ou de costas', () => {
+  const { soComFoto } = require('../js/filtros.js');
+  const pecas = [
+    { ref_mrbl: 'A', foto_frente: 'https://x/a.jpg', foto_costas: '' },
+    { ref_mrbl: 'B', foto_frente: '', foto_costas: 'https://x/b.jpg' },
+    { ref_mrbl: 'C', foto_frente: '', foto_costas: '' },
+    { ref_mrbl: 'D' }
+  ];
+  assert.deepStrictEqual(soComFoto(pecas).map((p) => p.ref_mrbl), ['A', 'B']);
+});
