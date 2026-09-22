@@ -1,0 +1,9 @@
+{
+  "name": "hub-pecas-catalogo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Catalogo interno de pecas da MRBL. So codigo: os dados vem de um webhook com senha.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
