@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1F4D43">
+  <title>HUB de Peças · MRBL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <!-- Entrada: aparece so enquanto nao ha senha guardada no aparelho -->
+  <section id="entrada" class="entrada esteira" hidden>
+    <form id="form-senha" class="etiqueta-entrada" autocomplete="off">
+      <span class="furo" aria-hidden="true"></span>
+      <p class="marca">MRBL</p>
+      <h1>HUB de Peças</h1>
+      <p class="entrada-texto">Catálogo das peças já produzidas.</p>
+      <label for="campo-senha">Senha do catálogo</label>
+      <input id="campo-senha" name="senha" type="password" autocomplete="current-password" required>
+      <p id="erro-senha" class="erro-senha" role="alert" hidden></p>
+      <button type="submit" class="botao-primario">Entrar</button>
+    </form>
+  </section>
+
+  <!-- Catalogo -->
+  <div id="app" class="app" hidden>
+    <header class="topo esteira">
+      <div class="topo-marca">
+        <span class="marca">MRBL</span>
+        <strong>HUB de Peças</strong>
+      </div>
+      <div class="topo-busca">
+        <label for="busca" class="so-leitor">Buscar peça</label>
+        <input id="busca" type="search" placeholder="Buscar por referência ou descrição" autocomplete="off" enterkeyhint="search">
+      </div>
+      <div class="topo-info">
+        <span id="contador" class="contador" aria-live="polite"></span>
+        <span id="atualizado" class="atualizado"></span>
+        <button id="sair" class="botao-texto" type="button">Sair</button>
+      </div>
+      <button id="abrir-filtros" class="botao-filtros" type="button" aria-controls="filtros" aria-expanded="false">Filtros</button>
+    </header>
+
+    <div class="corpo">
+      <aside id="filtros" class="filtros" aria-label="Filtros">
+        <div class="filtros-topo">
+          <h2>Filtros</h2>
+          <button id="limpar" class="botao-texto" type="button" hidden>Limpar filtros</button>
+          <button id="fechar-filtros" class="botao-texto so-celular" type="button">Ver peças</button>
+        </div>
+        <div id="lista-filtros"></div>
+      </aside>
+
+      <main id="conteudo" class="conteudo">
+        <div id="estado" class="estado" hidden></div>
+        <ul id="grade" class="grade" aria-label="Peças"></ul>
+      </main>
+    </div>
+
+    <div id="fundo-painel" class="fundo-painel" hidden></div>
+    <article id="painel" class="painel" aria-labelledby="painel-titulo" hidden tabindex="-1"></article>
+  </div>
+
+  <div id="carregando" class="carregando esteira" hidden>
+    <span class="carregando-linha" aria-hidden="true"></span>
+    <p>Carregando o catálogo…</p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/filtros.js"></script>
+  <script src="js/demo.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/tela.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
