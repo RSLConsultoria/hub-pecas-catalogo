@@ -13,7 +13,7 @@
     selecao: {},
     termo: '',
     soFoto: false,
-    ui: { abertos: { detalhes: true }, verTodos: {}, busca: {} }
+    ui: { abertos: { cliente: true }, verTodos: {}, busca: {} }
   };
 
   // ---------- Senha ----------

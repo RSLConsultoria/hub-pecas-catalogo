@@ -46,17 +46,17 @@
     CABECALHO_SENHA: 'X-Hub-Senha',
     CHAVE_SENHA_LOCAL: 'hubPecasSenha',
     FILTROS: [
-      { chave: 'detalhes', rotulo: 'Tem na peça', tipo: 'detalhes', familias: DETALHES },
       { chave: 'cliente', rotulo: 'Cliente', tipo: 'texto' },
+      { chave: 'valor_peca', rotulo: 'Valor por peça', tipo: 'faixa' },
       { chave: 'colecao', rotulo: 'Coleção', tipo: 'texto' },
+      { chave: 'detalhes', rotulo: 'Tem na peça', tipo: 'detalhes', familias: DETALHES },
       { chave: 'tipo_demanda', rotulo: 'Tipo de demanda', tipo: 'texto' },
       { chave: 'tecidos', rotulo: 'Tecido', tipo: 'lista' },
       { chave: 'composicoes', rotulo: 'Composição', tipo: 'lista' },
       { chave: 'tipos_tecido', rotulo: 'Tipo de tecido', tipo: 'lista' },
       { chave: 'marcas_ziper', rotulo: 'Marca do zíper', tipo: 'lista' },
       { chave: 'modelista', rotulo: 'Modelista', tipo: 'texto' },
-      { chave: 'produzido_por', rotulo: 'Será produzido por', tipo: 'texto' },
-      { chave: 'valor_peca', rotulo: 'Valor por peça', tipo: 'faixa' }
+      { chave: 'produzido_por', rotulo: 'Será produzido por', tipo: 'texto' }
     ]
   };
   raiz.HubConfig = HubConfig;
