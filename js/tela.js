@@ -253,10 +253,24 @@
       ['Tipo de demanda', p.tipo_demanda],
       ['Modelista', p.modelista],
       ['Será produzido por', p.produzido_por],
-      ['Valor por peça', valor(p.valor_peca)],
       ['Tecidos', (p.tecidos || []).join(' · ')],
       ['Composição', (p.composicoes || []).join(' · ')]
     ]);
+
+    // Valores: o total em destaque e, embaixo, de onde ele vem. Zero e um
+    // valor legitimo (aviamento zerado existe), entao o teste e por tipo.
+    function linhaValor(rotulo, v) {
+      if (typeof v !== 'number') return null;
+      return h('li', {}, h('span', { texto: rotulo }), h('b', { texto: valor(v) }));
+    }
+    var partes = [linhaValor('Mão de obra', p.valor_mo), linhaValor('Aviamentos fornecidos pela Stoffa', p.valor_aviamentos)].filter(Boolean);
+    var blocoValores = (typeof p.valor_peca === 'number' || partes.length) ? h('section.bloco', {},
+      h('h3', { texto: 'Valores' }),
+      h('div.valores', {},
+        h('div.valor-total', {},
+          h('span', { texto: 'Total por peça' }),
+          h('strong', { texto: typeof p.valor_peca === 'number' ? valor(p.valor_peca) : 'Não informado' })),
+        partes.length ? h('ul.valor-partes', {}, partes) : null)) : null;
 
     var materiais = (p.materiais || []).filter(function (m) { return m && (m.campos || []).length; });
     var blocoTecnica = materiais.length ? h('section.bloco', {},
@@ -296,6 +310,7 @@
       p.cliente ? h('span.peca-cliente', { texto: p.cliente }) : null,
       blocoFotos,
       ficha ? h('section.bloco', {}, h('h3', { texto: 'Peça' }), ficha) : null,
+      blocoValores,
       blocoTem,
       blocoTecnica,
       blocoParecidas,
