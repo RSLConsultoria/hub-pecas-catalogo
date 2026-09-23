@@ -249,6 +249,7 @@
       ['Coleção', p.colecao],
       ['Ref. do cliente', p.ref_cliente],
       ['Ref. coleção/ano', p.ref_colecao_ano],
+      ['Produto', p.produto],
       ['Tipo de demanda', p.tipo_demanda],
       ['Modelista', p.modelista],
       ['Será produzido por', p.produzido_por],

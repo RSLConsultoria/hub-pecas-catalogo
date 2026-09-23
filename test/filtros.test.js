@@ -109,7 +109,7 @@ test('faixa de valores ignora pecas sem valor', () => {
 
 test('config lista os filtros do design, com tipo valido', () => {
   const chaves = FILTROS.map((f) => f.chave);
-  ['cliente', 'colecao', 'tipo_demanda', 'modelista', 'produzido_por', 'valor_peca', 'tecidos', 'composicoes', 'tipos_tecido', 'marcas_ziper']
+  ['cliente', 'produto', 'colecao', 'tipo_demanda', 'modelista', 'produzido_por', 'valor_peca', 'tecidos', 'composicoes', 'tipos_tecido', 'marcas_ziper']
     .forEach((c) => assert.ok(chaves.includes(c), `falta o filtro ${c}`));
   FILTROS.forEach((f) => assert.ok(['texto', 'lista', 'faixa', 'detalhes'].includes(f.tipo), `${f.chave}: tipo ${f.tipo}`));
 });

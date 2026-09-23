@@ -47,6 +47,7 @@
     CHAVE_SENHA_LOCAL: 'hubPecasSenha',
     FILTROS: [
       { chave: 'cliente', rotulo: 'Cliente', tipo: 'texto' },
+      { chave: 'produto', rotulo: 'Produto', tipo: 'texto' },
       { chave: 'valor_peca', rotulo: 'Valor por peça', tipo: 'faixa' },
       { chave: 'colecao', rotulo: 'Coleção', tipo: 'texto' },
       { chave: 'detalhes', rotulo: 'Tem na peça', tipo: 'detalhes', familias: DETALHES },

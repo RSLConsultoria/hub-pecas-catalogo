@@ -34,7 +34,7 @@
   function peca(ref, desc, cliente, colecao, tecidos, extra, itens) {
     return Object.assign({
       ref_mrbl: ref, descricao: desc, ref_cliente: '', ref_colecao_ano: ref.slice(0, 3),
-      cliente: cliente, colecao: colecao, tipo_demanda: 'Produção', modelista: 'Modelista A',
+      cliente: cliente, colecao: colecao, tipo_demanda: 'Produção', produto: '', modelista: 'Modelista A',
       produzido_por: '', valor_peca: null, tecidos: tecidos, composicoes: [], tipos_tecido: ['LISO'],
       marcas_ziper: [], foto_frente: '', foto_costas: '',
       materiais: [
@@ -53,27 +53,27 @@
     total: 8,
     pecas: [
       peca('227.01.00001X', 'CALÇA PANTALONA', 'MARCA ALFA', '2027 VERÃO', ['LINHO RÚSTICO', 'VISCOSE'],
-        { valor_peca: 189.9, composicoes: ['55% LINHO 45% VISCOSE'], marcas_ziper: ['YKK'], foto_frente: fotoDemo('#E9E4DA', '#B9A27D', 'calca') },
+        { produto: '02 - CALÇA', valor_peca: 189.9, composicoes: ['55% LINHO 45% VISCOSE'], marcas_ziper: ['YKK'], foto_frente: fotoDemo('#E9E4DA', '#B9A27D', 'calca') },
         [ZIPER, BOTAO(1), CASEADO(1), TRAVETE(21), PASSANTE, BOLSO]),
       peca('227.01.00002X', 'CAMISA OVERSIZED', 'MARCA ALFA', '2027 VERÃO', ['TRICOLINE'],
-        { valor_peca: 129, composicoes: ['100% ALGODÃO'], foto_frente: fotoDemo('#E3E8EF', '#FFFFFF', 'camisa') },
+        { produto: '03 - CAMISA', valor_peca: 129, composicoes: ['100% ALGODÃO'], foto_frente: fotoDemo('#E3E8EF', '#FFFFFF', 'camisa') },
         [BOTAO(9), CASEADO(8)]),
       peca('227.02.00003X', 'BLAZER ALFAIATARIA', 'MARCA BETA', '2027 INVERNO', ['LÃ FRIA'],
-        { valor_peca: 495, composicoes: ['70% LÃ 30% POLIÉSTER'], modelista: 'Modelista B', foto_frente: fotoDemo('#DCDDE3', '#2B3350', 'jaqueta') },
+        { produto: '01 - BLAZER', valor_peca: 495, composicoes: ['70% LÃ 30% POLIÉSTER'], modelista: 'Modelista B', foto_frente: fotoDemo('#DCDDE3', '#2B3350', 'jaqueta') },
         [BOTAO(4), CASEADO(4), FORRO, OMBREIRA, BOLSO]),
       peca('227.02.00004X', 'SAIA MIDI PLISSADA', 'MARCA BETA', '2027 INVERNO', ['CREPE'],
-        { composicoes: ['100% POLIÉSTER'] }, [ZIPER_INV, FORRO]),
+        { produto: '07 - SAIA', composicoes: ['100% POLIÉSTER'] }, [ZIPER_INV, FORRO]),
       peca('226.03.00005X', 'VESTIDO CHEMISE', 'MARCA GAMA', '2026 VERÃO', ['LINHO RÚSTICO'],
-        { valor_peca: 260, composicoes: ['100% LINHO'], tipo_demanda: 'Desenvolvimento', foto_frente: fotoDemo('#EFE6E1', '#C98F7B', 'vestido') },
+        { produto: '05 - VESTIDO', valor_peca: 260, composicoes: ['100% LINHO'], tipo_demanda: 'Desenvolvimento', foto_frente: fotoDemo('#EFE6E1', '#C98F7B', 'vestido') },
         [BOTAO(8), CASEADO(8)]),
       peca('226.03.00006X', 'CALÇA ALFAIATARIA', 'MARCA GAMA', '2026 VERÃO', ['LINHO RÚSTICO'],
-        { valor_peca: 219, marcas_ziper: ['YKK'], composicoes: ['55% LINHO 45% VISCOSE'], foto_frente: fotoDemo('#E6E7E1', '#6E7A5C', 'calca') },
+        { produto: '02 - CALÇA', valor_peca: 219, marcas_ziper: ['YKK'], composicoes: ['55% LINHO 45% VISCOSE'], foto_frente: fotoDemo('#E6E7E1', '#6E7A5C', 'calca') },
         [ZIPER, BOTAO(1), CASEADO(1), TRAVETE(17), PASSANTE, BOLSO]),
       peca('226.04.00007X', 'JAQUETA UTILITÁRIA', 'MARCA ALFA', '2026 INVERNO', ['SARJA', 'TELA'],
-        { valor_peca: 310, marcas_ziper: ['SANCRIS'], modelista: 'Modelista B', foto_frente: fotoDemo('#E4E2DA', '#7C6A45', 'jaqueta') },
+        { produto: '08 - JAQUETA', valor_peca: 310, marcas_ziper: ['SANCRIS'], modelista: 'Modelista B', foto_frente: fotoDemo('#E4E2DA', '#7C6A45', 'jaqueta') },
         [ZIPER, BOTAO(6), TRAVETE(8), BOLSO]),
       peca('226.04.00008X', 'TOP CROPPED', 'MARCA BETA', '2026 VERÃO', [],
-        { tipo_demanda: 'Desenvolvimento' }, [linha('ELÁSTICO', { 'Consumo -  Aviamento costura🟡': '0,60' })])
+        { produto: '04 - BLUSA', tipo_demanda: 'Desenvolvimento' }, [linha('ELÁSTICO', { 'Consumo -  Aviamento costura🟡': '0,60' })])
     ]
   };
   raiz.HubDemo = HubDemo;
